@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+    	<meta name="description" content="Your description goes here">
+    	<meta name="keywords" content="one, two, three">
+			<meta name content="">
+
+		<title>Blank Template</title>
+
+		<!-- external CS  link -->
+		<link rel="stylesheet" href="css/normalize.css">
+		<link rel="stylesheet" href="css/style.css">
+
+	</head>
+	<body>
+		<h1>Tic Tac Toe</h1>
+		<p>Play against the bot. You start!</p>
+		<section id="board">
+			<div id="0" class="slot"></div>
+			<div id="1" class="slot"></div>
+			<div id="2" class="slot"></div>
+			<div id="3" class="slot"></div>
+			<div id="4" class="slot"></div>
+			<div id="5" class="slot"></div>
+			<div id="6" class="slot"></div>
+			<div id="7" class="slot"></div>
+			<div id="8" class="slot"></div>
+		</section>
+
+		<h2 id="result"></h2>
+
+		<script type="text/javascript">
+		//variable that keeps track of turns
+		let turn = "X";
+		let gameArray = ["","","","","","","","",""]
+		let gameOn = true
+
+		let elements = document.getElementsByClassName('slot')//an array of the divs
+		for (let i = 0;i<elements.length;i++){
+			console.log(elements[i])
+
+			//add click Event Listener to each div in the DOM
+			elements[i].addEventListener('click',(e)=>{
+				console.log(e.target)
+
+				if (turn==='X'){
+					let thisIndex = e.target.id
+					//control if the selected slot is empty
+						if (gameArray[thisIndex]==""){
+							//change html of slot
+							e.target.innerHTML = '<span>X<span>' //e.target is the div
+							//Add to array
+							gameArray[thisIndex] = 'X'
+							//evaluate the board
+							evaluateGame(gameArray)
+							//change turns
+							turn = 'O'
+						} else{
+							alert("Pick an empty slot")
+						}
+					}
+						//Bot selects random slot after a delay of 1 second
+						if((turn=='O')&&(gameOn==true)){
+							setTimeout(()=>{
+								let selected = false
+
+								//loop for the bot to pick randomly until it picks an available slot
+								while(selected ==false){
+									//Replace random with AI
+									let cpuGame = Math.floor(Math.random()*9)
+									//If pick empty slot, change the html to O
+									if (gameArray[cpuGame] == ""){
+										document.getElementsByClassName('slot')[cpuGame].innerHTML = '<span>O<span>'
+										gameArray[cpuGame] = 'O'
+										selected = true
+										//evaluate the board
+										evaluateGame(gameArray)
+										turn = 'X'
+										break;
+									}
+								}
+							},1000)
+						}
+			})
+		}
+		//Function to evaluate board
+		function evaluateGame(arr){
+			//Evaluate vertical
+			if (((arr[0]==arr[3])&&(arr[3]==arr[6])&&(arr[6]!=""))||((arr[1]==arr[4])&&(arr[4]==arr[7])&&(arr[7]!=""))||((arr[2]==arr[5])&&(arr[5]==arr[8])&&(arr[8]!=""))){
+				//set gameOn to false to stop the game and display the winner in the h2
+				gameOn = false
+				document.getElementById('result').innerHTML = "Game over! "+turn+" won."
+			} else //evaluate horizontal
+			if (((arr[0]==arr[2])&&(arr[2]==arr[3])&&(arr[3]!=""))||((arr[3]==arr[4])&&(arr[4]==arr[5])&&(arr[5]!=""))||((arr[6]==arr[7])&&(arr[7]==arr[8])&&(arr[8]!=""))) {
+				gameOn = false
+				document.getElementById('result').innerHTML = "Game over! "+turn+" won."
+			} else //evaluate diagonal
+			if (((arr[0]==arr[4])&&(arr[4]==arr[8])&&(arr[4]!=""))||((arr[2]==arr[4])&&(arr[4]==arr[6])&&(arr[4]!=""))) {
+				gameOn = false
+				document.getElementById('result').innerHTML = "Game over! "+turn+" won."
+			}
+		}
+		</script>
+	</body>
+</html>
